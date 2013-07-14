@@ -1,0 +1,34 @@
+@(statuses: List[Status])
+
+@main("Status database") {
+  <h2>Enter pairing status : </h2>
+
+  <form action="/insert" method="POST">
+    <input name="date" type="text" placeholder="Enter Date"/>
+    <input name="dev1" type="text" placeholder="Dev 1"/>
+    <input name="dev2" type="text" placeholder="Dev 2"/>
+    <input name="task" type="text" placeholder="Enter task"/>
+    <input type="submit"/>
+  </form>
+
+  <h2>Previously inserted statuses:</h2>
+  <table border="1">
+    <tr>
+    	<th>Date</th>
+    	<th>Dev1</th>
+    	<th>Dev2</th>
+    	<th>Task</th>
+    </tr>
+    @for(s <- statuses){ 
+    	<tr>
+    		<td>@s.date</td>
+    		<td>@s.dev1</td>
+    		<td>@s.dev2</td>
+    		<td>@s.task</td>
+    	</tr>
+    }
+  <tabe/>
+
+
+    
+}
