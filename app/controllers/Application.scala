@@ -12,6 +12,24 @@ import play.api.Play.current
 object Application extends Controller{
 
   def index = DBAction { implicit rs =>
-    Ok(views.html.index(Query(Statuses).list))
+    Ok(views.html.index(Query(Records).list))
   }
+
+  val recordForm = Form(
+    mapping(
+      "date" -> date("dd/MM/yyyy"),
+      "dev1" -> text,
+      "dev2" -> text,
+      "task" -> text
+    )(Record.apply)(Record.unapply)
+  )
+
+  def insert = DBAction { implicit rs =>
+    recordForm.bindFromRequest.fold (
+        formWithErrors => BadRequest( "You need to pass all values!" ),
+        record => Records.insert(record)
+    )        
+    Redirect(routes.Application.index)
+  }
+  
 }

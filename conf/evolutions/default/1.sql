@@ -3,9 +3,9 @@
 
 # --- !Ups
 
-create table "STATUS" ("dev1" VARCHAR NOT NULL,"dev2" VARCHAR NOT NULL);
+create table "RECORD" ("date" DATE NOT NULL,"dev1" VARCHAR NOT NULL,"dev2" VARCHAR NOT NULL,"task" VARCHAR NOT NULL);
 
 # --- !Downs
 
-drop table "STATUS";
+drop table "RECORD";
 
