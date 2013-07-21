@@ -1,8 +1,14 @@
 @()(implicit flash: play.api.mvc.Flash)
 
 @main("Pair Monitor") {
-  @flash.get("alert").map { message =>
+  @flash.get("alert-success").map { message =>
     <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      @message
+    </div>  
+  }
+  @flash.get("alert-error").map { message =>
+    <div class="alert alert-error">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       @message
     </div>  

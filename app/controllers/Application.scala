@@ -34,17 +34,17 @@ object Application extends Controller{
   def insert = DBAction { implicit rs =>
     recordForm.bindFromRequest.fold (
         formWithErrors => {
-          Redirect(HomePage).flashing("alert" -> "Enter all values")
+          Redirect(HomePage).flashing("alert-error" -> "Enter proper values")
         },
         record => {
           Records.insert(record)
-          Redirect(HomePage).flashing("alert" -> "Record inserted successfully")
+          Redirect(HomePage).flashing("alert-success" -> "Record inserted successfully")
         }
     )            
   }
   
   def delete(id: Long) = DBAction { implicit rs =>
     Records.where(_.id === id).delete
-    Redirect(RecordsPage).flashing("alert" -> "Record deleted successfully")
+    Redirect(RecordsPage).flashing("alert-success" -> "Record deleted successfully")
   }  
 }
