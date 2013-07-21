@@ -1,31 +1,39 @@
-@(records: List[Record])
+@main("Pair Monitor") {
+  <div id="saveSuccessAlert" class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    Record inserted successfully.
+  </div>  
+  <h4>Insert Pair Details :</h4>
 
-@main("Pairing database") {
-  <h2>Insert Pair Details :</h2>
-
-  <form action="/insert" method="POST">
-    <input name="date" type="text" placeholder="Date"/>
-    <input name="dev1" type="text" placeholder="Dev1"/>
-    <input name="dev2" type="text" placeholder="Dev2"/>
-    <input name="task" type="text" placeholder="Task"/>
-    <input type="submit"/>
+  <form class="form-horizontal" action="/insert" method="POST">
+    <div class="control-group">
+      <label class="control-label" for="inputDate">Date : </label>
+      <div class="controls">
+        <input name="date" id="inputDate" type="text" placeholder="Date"/>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputDev1">Dev 1 : </label>
+      <div class="controls">
+        <input name="dev1" id="inputDev1" type="text" placeholder="Dev1"/>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputDev2">Dev 2 : </label>
+      <div class="controls">
+        <input name="dev2" id="inputDev2" type="text" placeholder="Dev1"/>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputTask">Task : </label>
+      <div class="controls">
+        <textarea id="inputTask" name="task" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="control-group">    
+      <div class="controls">
+        <input class="btn" type="submit"/>
+      </div>
+    </div>    
   </form>
-
-  <h2>Previously inserted records : </h2>
-  <table border="1">
-    <tr>
-      <th>Date</th>
-      <th>Dev 1</th>
-      <th>Dev 2</th>
-      <th>Task</th>
-    </tr>
-    @for(r <- records){ 
-      <tr>
-        <td>@r.date</td>
-        <td>@r.dev1</td>
-        <td>@r.dev2</td>
-        <td>@r.task</td>
-      </tr>
-    }
-  <tabe/>    
 }

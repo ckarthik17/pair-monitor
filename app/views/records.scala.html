@@ -1,0 +1,21 @@
+@(records: List[Record])
+
+@main("Pair Monitor") {
+  <h4>Existing Records : </h4>
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th>Date</th>
+      <th>Dev 1</th>
+      <th>Dev 2</th>
+      <th>Task</th>
+    </tr>
+    @for(r <- records){ 
+      <tr>
+        <td>@r.date</td>
+        <td>@r.dev1</td>
+        <td>@r.dev2</td>
+        <td>@r.task</td>
+      </tr>
+    }
+  <tabe/>    
+}

@@ -11,8 +11,12 @@ import play.api.Play.current
 
 object Application extends Controller{
 
-  def index = DBAction { implicit rs =>
-    Ok(views.html.index(Query(Records).list))
+  def index = Action {
+    Ok(views.html.index())
+  }
+  
+  def records = DBAction { implicit rs =>
+    Ok(views.html.records(Query(Records).list))
   }
 
   val recordForm = Form(
