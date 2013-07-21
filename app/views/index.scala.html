@@ -6,37 +6,39 @@
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       Record inserted successfully.
     </div>  
-  }
-  <h4>Insert Pair Details :</h4>  
+  }  
   <form class="form-horizontal" action="/insert" method="POST">
-    <div class="control-group">
-      <label class="control-label" for="inputDate">Date : </label>
-      <div class="controls">
-        <input name="date" id="inputDate" type="text" placeholder="Date"/>
+    <fieldset>
+      <legend>Insert Pair Details</legend>  
+      <div class="control-group">
+        <label class="control-label" for="inputDate">Date : </label>
+        <div class="controls">
+          <input name="date" id="inputDate" type="text" placeholder="Date"/>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="inputDev1">Dev 1 : </label>
-      <div class="controls">
-        <input name="dev1" id="inputDev1" type="text" placeholder="Dev1"/>
+      <div class="control-group">
+        <label class="control-label" for="inputDev1">Dev 1 : </label>
+        <div class="controls">
+          <input name="dev1" id="inputDev1" type="text" placeholder="Dev1"/>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="inputDev2">Dev 2 : </label>
-      <div class="controls">
-        <input name="dev2" id="inputDev2" type="text" placeholder="Dev1"/>
+      <div class="control-group">
+        <label class="control-label" for="inputDev2">Dev 2 : </label>
+        <div class="controls">
+          <input name="dev2" id="inputDev2" type="text" placeholder="Dev1"/>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="inputTask">Task : </label>
-      <div class="controls">
-        <textarea id="inputTask" name="task" rows="3"></textarea>
+      <div class="control-group">
+        <label class="control-label" for="inputTask">Task : </label>
+        <div class="controls">
+          <textarea id="inputTask" name="task" rows="3"></textarea>
+        </div>
       </div>
-    </div>
-    <div class="control-group">    
-      <div class="controls">
-        <input class="btn" type="submit"/>
-      </div>
-    </div>    
+      <div class="control-group">    
+        <div class="controls">
+          <input class="btn btn-primary" type="submit"/>
+        </div>
+      </div>    
+    </fieldset>      
   </form>
 }

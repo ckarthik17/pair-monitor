@@ -1,21 +1,25 @@
 @(records: List[Record])
 
 @main("Pair Monitor") {
-  <h4>Existing Records : </h4>
-  <table class="table table-striped table-bordered">
-    <tr>
-      <th>Date</th>
-      <th>Dev 1</th>
-      <th>Dev 2</th>
-      <th>Task</th>
-    </tr>
-    @for(r <- records){ 
-      <tr>
-        <td>@r.date</td>
-        <td>@r.dev1</td>
-        <td>@r.dev2</td>
-        <td>@r.task</td>
-      </tr>
-    }
-  <tabe/>    
+    <fieldset>
+      <legend>Existing Records</legend>  
+      <table class="table table-striped table-bordered">
+        <tr>
+          <th>Date</th>
+          <th>Dev 1</th>
+          <th>Dev 2</th>
+          <th>Task</th>          
+          <th>Delete</th>          
+        </tr>
+        @for(r <- records){ 
+          <tr>
+            <td>@r.date</td>
+            <td>@r.dev1</td>
+            <td>@r.dev2</td>
+            <td>@r.task</td>
+            <td><a class="btn" href="/delete/@r.dev1"><i class="icon-remove"></i></a></td>
+          </tr>
+        }
+      <tabe/>    
+    </fieldset>  
 }
