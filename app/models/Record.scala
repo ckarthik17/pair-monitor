@@ -3,6 +3,7 @@ package models
 import play.api.db.slick.Config.driver.simple._
 import java.util.Date
 import slick.lifted.MappedTypeMapper
+import play.api.Play
 
 case class Record(id: Option[Long] = None, date: Date, dev1: String, dev2: String, task: String)
 
@@ -19,5 +20,8 @@ object Records extends Table[Record]("RECORD") {
   def task = column[String]("task", O.NotNull)
 
   def * = id.? ~ date ~  dev1 ~ dev2 ~ task <> (Record.apply _, Record.unapply _)
-  def autoInc = * returning id
+  
+  def getDevs = {
+    Play.current.configuration.getString("devs").get.split(",")
+  }
 }

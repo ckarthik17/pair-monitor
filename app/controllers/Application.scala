@@ -33,7 +33,9 @@ object Application extends Controller{
 
   def insert = DBAction { implicit rs =>
     recordForm.bindFromRequest.fold (
-        formWithErrors => BadRequest( "You need to pass all values!" ),
+        formWithErrors => {
+          Redirect(HomePage).flashing("alert" -> "Enter all values")
+        },
         record => {
           Records.insert(record)
           Redirect(HomePage).flashing("alert" -> "Record inserted successfully")

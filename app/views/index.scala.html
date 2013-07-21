@@ -1,4 +1,5 @@
 @()(implicit flash: play.api.mvc.Flash)
+
 @main("Pair Monitor") {
   @flash.get("alert").map { message =>
     <div class="alert alert-success">
@@ -12,19 +13,29 @@
       <div class="control-group">
         <label class="control-label" for="inputDate">Date : </label>
         <div class="controls">
-          <input name="date" id="inputDate" type="text" placeholder="Date"/>
+          <input name="date" id="inputDate" type="text" placeholder="Date" required/>
         </div>
       </div>
       <div class="control-group">
         <label class="control-label" for="inputDev1">Dev 1 : </label>
         <div class="controls">
-          <input name="dev1" id="inputDev1" type="text" placeholder="Dev1"/>
+          <select name="dev1" id="inputDev1" required>
+            <option value="" disabled selected>Select Dev 1</option>
+            @for(dev <- Records.getDevs) {
+              <option>@dev</option>
+            }
+          </select>
         </div>
       </div>
       <div class="control-group">
         <label class="control-label" for="inputDev2">Dev 2 : </label>
-        <div class="controls">
-          <input name="dev2" id="inputDev2" type="text" placeholder="Dev1"/>
+        <div class="controls">          
+          <select name="dev2" id="inputDev2" required>
+            <option value="" disabled selected>Select Dev 2</option>
+            @for(dev <- Records.getDevs) {
+              <option>@dev</option>
+            }
+          </select>
         </div>
       </div>
       <div class="control-group">
