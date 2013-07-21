@@ -1,10 +1,13 @@
-@main("Pair Monitor") {
-  <div id="saveSuccessAlert" class="alert alert-success">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    Record inserted successfully.
-  </div>  
-  <h4>Insert Pair Details :</h4>
+@(insertSuccessful: Boolean)
 
+@main("Pair Monitor") {
+  @if(insertSuccessful) {
+    <div id="saveSuccessAlert" class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      Record inserted successfully.
+    </div>  
+  }
+  <h4>Insert Pair Details :</h4>  
   <form class="form-horizontal" action="/insert" method="POST">
     <div class="control-group">
       <label class="control-label" for="inputDate">Date : </label>

@@ -3,6 +3,4 @@ $(document).ready(function() {
 	  format: 'dd/mm/yyyy',
 	  autoclose: true
 	});	
-
-	$('#saveSuccessAlert').hide();
 })

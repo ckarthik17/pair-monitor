@@ -11,8 +11,8 @@ import play.api.Play.current
 
 object Application extends Controller{
 
-  def index = Action {
-    Ok(views.html.index())
+  def index(insertSuccessful: Option[Boolean]) = Action {
+    Ok(views.html.index(insertSuccessful getOrElse false))
   }
   
   def records = DBAction { implicit rs =>
@@ -33,7 +33,7 @@ object Application extends Controller{
         formWithErrors => BadRequest( "You need to pass all values!" ),
         record => Records.insert(record)
     )        
-    Redirect(routes.Application.index)
+    Redirect(routes.Application.index(Some(true)))
   }
   
 }
