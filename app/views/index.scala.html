@@ -1,12 +1,12 @@
 @()(implicit flash: play.api.mvc.Flash)
 @main("Pair Monitor") {
   @flash.get("alert").map { message =>
-    <div id="saveSuccessAlert" class="alert alert-success">
+    <div class="alert alert-success">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       @message
     </div>  
   }
-  <form class="form-horizontal" action="/insert" method="POST">
+  <form class="form-horizontal" action="/records/new" method="POST">
     <fieldset>
       <legend>Insert Pair Details</legend>  
       <div class="control-group">

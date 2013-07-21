@@ -10,7 +10,8 @@ import play.api.mvc._
 import play.api.Play.current
 
 object Application extends Controller{
-val Home = routes.Application.index
+  val HomePage = routes.Application.index
+  val RecordsPage = routes.Application.records
 
   def index = Action { implicit rs =>
     Ok(views.html.index())
@@ -35,9 +36,13 @@ val Home = routes.Application.index
         formWithErrors => BadRequest( "You need to pass all values!" ),
         record => {
           Records.insert(record)
-          Redirect(Home).flashing("alert" -> "Record inserted successfully")
+          Redirect(HomePage).flashing("alert" -> "Record inserted successfully")
         }
     )            
   }
   
+  def delete(id: Long) = DBAction { implicit rs =>
+    Records.where(_.id === id).delete
+    Redirect(RecordsPage).flashing("alert" -> "Record deleted successfully")
+  }  
 }
