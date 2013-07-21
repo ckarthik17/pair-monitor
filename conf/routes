@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /       	controllers.Application.index(insertSuccessful: Option[Boolean])
+GET     /       	controllers.Application.index
 GET     /records	controllers.Application.records
 POST    /insert		controllers.Application.insert
 

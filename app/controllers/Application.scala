@@ -10,9 +10,10 @@ import play.api.mvc._
 import play.api.Play.current
 
 object Application extends Controller{
+val Home = routes.Application.index
 
-  def index(insertSuccessful: Option[Boolean]) = Action {
-    Ok(views.html.index(insertSuccessful getOrElse false))
+  def index = Action { implicit rs =>
+    Ok(views.html.index())
   }
   
   def records = DBAction { implicit rs =>
@@ -21,6 +22,7 @@ object Application extends Controller{
 
   val recordForm = Form(
     mapping(
+      "id" -> optional(longNumber),
       "date" -> date("dd/MM/yyyy"),
       "dev1" -> text,
       "dev2" -> text,
@@ -31,9 +33,11 @@ object Application extends Controller{
   def insert = DBAction { implicit rs =>
     recordForm.bindFromRequest.fold (
         formWithErrors => BadRequest( "You need to pass all values!" ),
-        record => Records.insert(record)
-    )        
-    Redirect(routes.Application.index(Some(true)))
+        record => {
+          Records.insert(record)
+          Redirect(Home).flashing("alert" -> "Record inserted successfully")
+        }
+    )            
   }
   
 }
