@@ -13,48 +13,40 @@
       @message
     </div>  
   }
-  <form class="form-horizontal" action="/records/new" method="POST">
+  <form role="form" action="/records/new" method="POST">
     <fieldset>
       <legend>Insert Pair Details</legend>  
-      <div class="control-group">
-        <label class="control-label" for="inputDate">Date : </label>
-        <div class="controls">
-          <input name="date" id="inputDate" type="text" placeholder="Date" required/>
-        </div>
+      <div class="form-group">
+        <label for="inputDate">Date : </label>
+        <input class="form-control" name="date" id="inputDate" type="text" placeholder="Date" required/>
+      </div>      
+      
+      <div class="form-group">
+        <label for="inputDev1">Dev 1 : </label>        
+        <select class="form-control" name="dev1" id="inputDev1" required>
+          <option value="" disabled selected>Select Dev 1</option>
+          @for(dev <- Records.getDevs) {
+            <option>@dev</option>
+          }
+        </select>        
       </div>
-      <div class="control-group">
-        <label class="control-label" for="inputDev1">Dev 1 : </label>
-        <div class="controls">
-          <select name="dev1" id="inputDev1" required>
-            <option value="" disabled selected>Select Dev 1</option>
-            @for(dev <- Records.getDevs) {
-              <option>@dev</option>
-            }
-          </select>
-        </div>
+      
+      <div class="form-group">
+        <label for="inputDev2">Dev 2 : </label>        
+        <select class="form-control" name="dev2" id="inputDev2" required>
+          <option value="" disabled selected>Select Dev 2</option>
+          @for(dev <- Records.getDevs) {
+            <option>@dev</option>
+          }
+        </select>        
       </div>
-      <div class="control-group">
-        <label class="control-label" for="inputDev2">Dev 2 : </label>
-        <div class="controls">          
-          <select name="dev2" id="inputDev2" required>
-            <option value="" disabled selected>Select Dev 2</option>
-            @for(dev <- Records.getDevs) {
-              <option>@dev</option>
-            }
-          </select>
-        </div>
+
+      <div class="form-group">
+        <label for="inputTask">Task : </label>        
+        <textarea class="form-control" id="inputTask" name="task" rows="3"></textarea>        
       </div>
-      <div class="control-group">
-        <label class="control-label" for="inputTask">Task : </label>
-        <div class="controls">
-          <textarea id="inputTask" name="task" rows="3"></textarea>
-        </div>
-      </div>
-      <div class="control-group">    
-        <div class="controls">
-          <input class="btn btn-primary" type="submit"/>
-        </div>
-      </div>    
+      
+      <button type="submit" class="btn btn-primary">Submit</button>    
     </fieldset>      
   </form>
 }
