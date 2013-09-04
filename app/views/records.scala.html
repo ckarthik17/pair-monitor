@@ -19,7 +19,7 @@
         </tr>
         @for(r <- records){ 
           <tr>
-            <td>@r.date</td>
+            <td>@r.date.format("EEE, dd-MMM-yyyy")</td>
             <td>@r.dev1</td>
             <td>@r.dev2</td>
             <td>@r.task</td>

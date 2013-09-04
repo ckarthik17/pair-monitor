@@ -10,15 +10,27 @@ import play.api.mvc._
 import play.api.Play.current
 
 object Application extends Controller{
-  val HomePage = routes.Application.index
+  val HomePage = routes.Application.chart
+  val InsertPage = routes.Application.insert
   val RecordsPage = routes.Application.records
 
-  def index = Action { implicit rs =>
-    Ok(views.html.index())
+  def insert = Action { implicit rs =>
+    Ok(views.html.insert())
+  }
+  
+  def chart = Action { implicit rs =>
+    Ok(views.html.chart())
   }
   
   def records = DBAction { implicit rs =>
-    Ok(views.html.records(Query(Records).list))
+    val query = Query(Records).sortBy(r => (r.date,r.dev1))
+    Ok(views.html.records(query.list))
+  }
+  
+  def deleteAll = DBAction { implicit rs =>
+    val query = Query(Records)
+    query.delete
+    Ok(views.html.records(query.list))
   }
 
   val recordForm = Form(
@@ -31,14 +43,14 @@ object Application extends Controller{
     )(Record.apply)(Record.unapply)
   )
 
-  def insert = DBAction { implicit rs =>
+  def newRecord = DBAction { implicit rs =>
     recordForm.bindFromRequest.fold (
         formWithErrors => {
-          Redirect(HomePage).flashing("alert-error" -> "Enter proper values")
+          Redirect(InsertPage).flashing("alert-error" -> "Enter proper values")
         },
         record => {
           Records.insert(record)
-          Redirect(HomePage).flashing("alert-success" -> "Record inserted successfully")
+          Redirect(InsertPage).flashing("alert-success" -> "Record inserted successfully")
         }
     )            
   }
