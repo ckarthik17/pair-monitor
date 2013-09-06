@@ -25,7 +25,7 @@
         <label for="inputDev1">Dev 1 : </label>        
         <select class="form-control" name="dev1" id="inputDev1" required>
           <option value="" disabled selected>Select Dev 1</option>
-          @for(dev <- Records.getDevs) {
+          @for(dev <- Records.devs) {
             <option>@dev</option>
           }
         </select>        
@@ -35,7 +35,7 @@
         <label for="inputDev2">Dev 2 : </label>        
         <select class="form-control" name="dev2" id="inputDev2" required>
           <option value="" disabled selected>Select Dev 2</option>
-          @for(dev <- Records.getDevs) {
+          @for(dev <- Records.devs) {
             <option>@dev</option>
           }
         </select>        
