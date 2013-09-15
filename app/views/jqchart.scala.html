@@ -1,0 +1,42 @@
+@()(implicit flash: play.api.mvc.Flash)
+
+@main("Pair Monitor") {
+  <div id="chart_div" style="width: 1000px; height: 520px;"></div>
+}
+
+<script type="text/javascript">
+    var devs = @Html(
+      Records.devs.mkString("['", "','", "']")
+    );
+    var data = [
+      @Html(
+        (for(dev <- Records.devs) yield Records.pairCount(dev)).mkString(",")
+      )
+    ];
+    
+    $(document).ready(function() {
+        $.jqplot.config.enablePlugins = true;
+        $.jqplot('chart_div', data, {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            animate: !$.jqplot.use_excanvas,
+            title: 'Pair Chart',
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true } ,
+                rendererOptions: {
+                }
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: devs
+                },
+                yaxis: {
+                    label: 'Count',
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                }
+            },
+            highlighter: { show: false }
+        });
+    });
+</script>
