@@ -38,7 +38,7 @@ object Application extends Controller{
       "id" -> optional(longNumber),
       "date" -> date("dd/MM/yyyy"),
       "dev1" -> text,
-      "dev2" -> text,
+      "dev2" -> optional(text),
       "task" -> text
     )(Record.apply)(Record.unapply)
   )

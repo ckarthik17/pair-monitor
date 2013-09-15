@@ -7,7 +7,7 @@ import slick.lifted.MappedTypeMapper
 import play.api.Play
 import play.api.Play.current
 
-case class Record(id: Option[Long] = None, date: Date, dev1: String, dev2: String, task: String)
+case class Record(id: Option[Long] = None, date: Date, dev1: String, dev2: Option[String], task: String)
 
 object Records extends Table[Record]("RECORD") {
   implicit val javaUtilDateTypeMapper = MappedTypeMapper.base[java.util.Date, java.sql.Date](
@@ -18,20 +18,26 @@ object Records extends Table[Record]("RECORD") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def date = column[Date]("date", O.NotNull)
   def dev1 = column[String]("dev1", O.NotNull)
-  def dev2 = column[String]("dev2", O.NotNull)
+  def dev2 = column[String]("dev2", O.Nullable)
   def task = column[String]("task", O.NotNull)
 
-  def * = id.? ~ date ~  dev1 ~ dev2 ~ task <> (Record.apply _, Record.unapply _)
+  def * = id.? ~ date ~  dev1 ~ dev2.? ~ task <> (Record, Record.unapply _)
   
   def pairCount(dev: String) = {
     DB.withSession { implicit session:Session =>
       val records = Query(Records).where(r => (r.dev1 === dev || r.dev2 === dev)).list
       val pairs = for(record <- records) yield (record.dev1, record.dev2)
       val pairedWithList = pairs.map { p =>        
-        if(p._1 == dev) { 
-          if(p._2 == "") dev else p._2
+        val d1 = p._1
+        val d2 = p._2
+        if(d1 == dev) {
+          d2 match {
+            case None => dev
+            case Some("") => dev
+            case _ => d2.get
+          }
         } 
-        else p._1
+        else d1
       } 
       val pairedWithCount = pairedWithList.groupBy(identity).mapValues(_.size).withDefaultValue(0)
       val result = for(d <- devs) yield pairedWithCount(d)
