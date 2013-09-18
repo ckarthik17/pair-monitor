@@ -45,6 +45,25 @@ object Records extends Table[Record]("RECORD") {
     }    
   }
 
+  def topPairs(n: Integer) = {
+    DB.withSession { implicit session:Session =>
+      val records = Query(Records).list
+      val pairs = for(record <- records) yield (record.dev1, 
+        record.dev2 match { 
+          case None => record.dev1
+          case Some(x) => x
+        }
+      )
+      val consolidatedPairs = pairs.map { p =>
+        val (k,v) = p
+        if(k < v) (k,v) else (v,k)
+      }
+
+      val pairCountMap = consolidatedPairs.groupBy(identity).mapValues(_.size).withDefaultValue(0)
+      pairCountMap.toSeq.sortBy(x => -(x._2)).take(n)
+    }        
+  }
+
   def devs = {
     Play.current.configuration.getString("devs").get.split(",")
   }
