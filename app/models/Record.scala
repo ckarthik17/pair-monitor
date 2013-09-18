@@ -45,7 +45,15 @@ object Records extends Table[Record]("RECORD") {
     }    
   }
 
-  def topPairs(n: Integer) = {
+  def mostPaired(n: Integer) = {
+    pairCount.toSeq.sortBy(x => -(x._2)).take(n)
+  }
+  
+  def leastPaired(n: Integer) = {
+    pairCount.toSeq.sortBy(x => (x._2)).take(n)
+  }
+
+  def pairCount = {
     DB.withSession { implicit session:Session =>
       val records = Query(Records).list
       val pairs = for(record <- records) yield (record.dev1, 
@@ -59,9 +67,8 @@ object Records extends Table[Record]("RECORD") {
         if(k < v) (k,v) else (v,k)
       }
 
-      val pairCountMap = consolidatedPairs.groupBy(identity).mapValues(_.size).withDefaultValue(0)
-      pairCountMap.toSeq.sortBy(x => -(x._2)).take(n)
-    }        
+      consolidatedPairs.groupBy(identity).mapValues(_.size).withDefaultValue(0)
+    }    
   }
 
   def devs = {

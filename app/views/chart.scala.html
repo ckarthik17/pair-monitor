@@ -25,16 +25,13 @@
 
 @main("Pair Monitor") {
   <table class="table">
-    <thead><tr>
-      @defining(Records.topPairs(3)) { topPairs =>
-        @for(r <- topPairs.take(1)) {        
+    <thead><tr><th class="danger" style="border: 2px solid black;"><h3 class="text-center">Most Paired : </h3></th>
+      @defining(Records.mostPaired(3)) { topPairs =>
+        @for(r <- topPairs) {        
           @defining(r._1) { pair =>
-            <th class="danger" style="border: 2px solid black;"><h3 class="text-center">@pair._1/@pair._2 : @r._2</h2></th>
+          @defining(if(pair._1 == pair._2) pair._1 else pair._1 + "/" + pair._2) { p =>
+            <th style="border: 2px solid black;"><h3 class="text-center">@p - @r._2</h3></th>
           }
-        }
-        @for(r <- topPairs.takeRight(2)) {        
-          @defining(r._1) { pair =>
-            <th class="warning" style="border: 2px solid black;"><h3 class="text-center">@pair._1/@pair._2 : @r._2</h2></th>
           }
         }
       }
