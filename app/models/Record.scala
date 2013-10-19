@@ -6,6 +6,7 @@ import java.util.Date
 import slick.lifted.MappedTypeMapper
 import play.api.Play
 import play.api.Play.current
+import java.util.Calendar
 
 case class Record(id: Option[Long] = None, date: Date, dev1: String, dev2: Option[String], task: String)
 
@@ -25,7 +26,7 @@ object Records extends Table[Record]("RECORD") {
   
   def pairCount(dev: String) = {
     DB.withSession { implicit session:Session =>
-      val records = Query(Records).where(r => (r.dev1 === dev || r.dev2 === dev)).list
+      val records = getRecords.where(r => (r.dev1 === dev || r.dev2 === dev)).list
       val pairs = for(record <- records) yield (record.dev1, record.dev2)
       val pairedWithList = pairs.map { p =>        
         val d1 = p._1
@@ -55,7 +56,7 @@ object Records extends Table[Record]("RECORD") {
 
   def pairCount = {
     DB.withSession { implicit session:Session =>
-      val records = Query(Records).list
+      val records = getRecords.list
       val pairs = for(record <- records) yield (record.dev1, 
         record.dev2 match { 
           case None => record.dev1
@@ -69,6 +70,16 @@ object Records extends Table[Record]("RECORD") {
 
       consolidatedPairs.groupBy(identity).mapValues(_.size).withDefaultValue(0)
     }    
+  }
+
+  val cutOffDate = {
+    val cal = Calendar.getInstance()
+    cal.add(Calendar.MONTH, -1)
+    cal.getTime()
+  }
+
+  def getRecords = {
+    Query(Records).where(r => r.date > cutOffDate)
   }
 
   def devs = {
