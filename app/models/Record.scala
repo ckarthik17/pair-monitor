@@ -54,7 +54,7 @@ object Records extends Table[Record]("RECORD") {
     pairCount.toSeq.sortBy(x => (x._2)).take(n)
   }
 
-  def pairCount = {
+  private def pairCount = {
     DB.withSession { implicit session:Session =>
       val records = getRecords.list
       val pairs = for(record <- records) yield (record.dev1, 
@@ -72,13 +72,13 @@ object Records extends Table[Record]("RECORD") {
     }    
   }
 
-  val cutOffDate = {
+  private val cutOffDate = {
     val cal = Calendar.getInstance()
     cal.add(Calendar.MONTH, -1)
     cal.getTime()
   }
 
-  def getRecords = {
+  private def getRecords = {
     Query(Records).where(r => r.date > cutOffDate)
   }
 
