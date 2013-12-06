@@ -23,7 +23,7 @@ object Application extends Controller{
   }
   
   def records = DBAction { implicit rs =>
-    val query = Query(Records).sortBy(r => (r.date,r.dev1))
+    val query = Query(Records).sortBy(r => (r.date.desc,r.dev1))
     Ok(views.html.records(query.list))
   }
   
