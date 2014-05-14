@@ -46,11 +46,11 @@ object Application extends Controller{
   def newRecord = DBAction { implicit rs =>
     recordForm.bindFromRequest.fold (
         formWithErrors => {
-          Redirect(InsertPage).flashing("alert-error" -> "Enter proper values")
+          Redirect(RecordsPage).flashing("alert-error" -> "Enter proper values")
         },
         record => {
           Records.insert(record)
-          Redirect(InsertPage).flashing("alert-success" -> "Record inserted successfully")
+          Redirect(RecordsPage).flashing("alert-success" -> "Record inserted successfully")
         }
     )            
   }
