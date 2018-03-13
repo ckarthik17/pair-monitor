@@ -1,88 +1,66 @@
 package models
 
-import play.api.db.slick._
-import play.api.db.slick.Config.driver.simple._
-import java.util.Date
-import slick.lifted.MappedTypeMapper
-import play.api.Play
-import play.api.Play.current
-import java.util.Calendar
+import java.sql.{Date => SqlDate}
+import java.util.{Date => UtilDate}
 
-case class Record(id: Option[Long] = None, date: Date, dev1: String, dev2: Option[String], task: String)
+import javax.inject.{Inject, Singleton}
+import play.api.Configuration
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import slick.jdbc.JdbcProfile
 
-object Records extends Table[Record]("RECORD") {
-  implicit val javaUtilDateTypeMapper = MappedTypeMapper.base[java.util.Date, java.sql.Date](
-    x => new java.sql.Date(x.getTime),
-    x => new java.util.Date(x.getTime)
+import scala.concurrent.{ExecutionContext, Future}
+
+case class Record(id: Option[Long] = None, date: UtilDate, dev1: String, dev2: Option[String], task: String)
+
+@Singleton()
+class RecordsDAO @Inject()
+(configuration: Configuration, protected val dbConfigProvider: DatabaseConfigProvider)
+(implicit executionContext: ExecutionContext)
+  extends HasDatabaseConfigProvider[JdbcProfile] {
+
+  import profile.api._
+
+  def insert(record: Record): Future[Unit] = {
+    db.run(records += record).map(_ => ())
+  }
+
+  def delete(recordId: Long): Future[Int] = {
+    db.run(records.filter(_.id === recordId).delete)
+  }
+
+  def deleteAll: Future[Int] = {
+    db.run(records.delete)
+  }
+
+  def allPairingSessions: Future[Seq[Record]] = {
+    db.run(records.sortBy(r => (r.date.desc, r.dev1)).result)
+  }
+
+  def pairingSessions(cutOffDate: UtilDate): Future[Seq[(String, Option[String])]] = {
+    db.run(records.filter(r => r.date > cutOffDate).map(r => (r.dev1, r.dev2)).result)
+  }
+
+
+  private val records = TableQuery[Records]
+
+  implicit val localDateColumnType: BaseColumnType[UtilDate] = MappedColumnType.base[UtilDate, SqlDate](
+    d => new SqlDate(d.getTime),
+    d => new UtilDate(d.getTime)
   )
 
-	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-  def date = column[Date]("date", O.NotNull)
-  def dev1 = column[String]("dev1", O.NotNull)
-  def dev2 = column[String]("dev2", O.Nullable)
-  def task = column[String]("task", O.NotNull)
+  class Records(tag: Tag) extends Table[Record](tag, "RECORD") {
 
-  def * = id.? ~ date ~  dev1 ~ dev2.? ~ task <> (Record, Record.unapply _)
-  
-  def pairCount(dev: String) = {
-    DB.withSession { implicit session:Session =>
-      val records = getRecords.where(r => (r.dev1 === dev || r.dev2 === dev)).list
-      val pairs = for(record <- records) yield (record.dev1, record.dev2)
-      val pairedWithList = pairs.map { p =>        
-        val d1 = p._1
-        val d2 = p._2
-        if(d1 == dev) {
-          d2 match {
-            case None => dev
-            case Some("") => dev
-            case _ => d2.get
-          }
-        } 
-        else d1
-      } 
-      val pairedWithCount = pairedWithList.groupBy(identity).mapValues(_.size).withDefaultValue(0)
-      val result = for(d <- devs) yield pairedWithCount(d)
-      result.mkString("['" + dev + "',",",","]")
-    }    
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
+    def date = column[UtilDate]("date")
+
+    def dev1 = column[String]("dev1")
+
+    def dev2 = column[Option[String]]("dev2")
+
+    def task = column[String]("task")
+
+    override def * = (id.?, date, dev1, dev2, task) <> (Record.tupled, Record.unapply)
   }
 
-  def mostPaired(n: Integer) = {
-    pairCount.toSeq.sortBy(x => -(x._2)).take(n)
-  }
-  
-  def leastPaired(n: Integer) = {
-    pairCount.toSeq.sortBy(x => (x._2)).take(n)
-  }
-
-  private def pairCount = {
-    DB.withSession { implicit session:Session =>
-      val records = getRecords.list
-      val pairs = for(record <- records) yield (record.dev1, 
-        record.dev2 match { 
-          case None => record.dev1
-          case Some(x) => x
-        }
-      )
-      val consolidatedPairs = pairs.map { p =>
-        val (k,v) = p
-        if(k < v) (k,v) else (v,k)
-      }
-
-      consolidatedPairs.groupBy(identity).mapValues(_.size).withDefaultValue(0)
-    }    
-  }
-
-  private val cutOffDate = {
-    val cal = Calendar.getInstance()
-    cal.add(Calendar.MONTH, -1)
-    cal.getTime()
-  }
-
-  private def getRecords = {
-    Query(Records).where(r => r.date > cutOffDate)
-  }
-
-  def devs = {
-    Play.current.configuration.getString("devs").get.split(",")
-  }
 }
