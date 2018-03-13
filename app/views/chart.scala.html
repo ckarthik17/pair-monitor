@@ -1,32 +1,30 @@
-@()(implicit flash: play.api.mvc.Flash)
+@(devs: List[String], pairingData: String, mostPairedDevs: List[((String, String), Int)])(implicit flash: play.api.mvc.Flash)
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-  google.load("visualization", "1", {packages:["corechart"]});
-  google.setOnLoadCallback(drawChart);
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-      @Html(
-        Records.devs.mkString("['Devs','", "','", "']")
-      ),
-      @Html(
-        (for(dev <- Records.devs) yield Records.pairCount(dev)).mkString(",")
-      )
-    ]);
 
-    var options = {      
-      chartArea : { left: 30, top:40 }
-    };
-
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
-</script>
 
 @main("Pair Monitor") {
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.setOnLoadCallback(drawChart);
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable([
+                    @Html(s"['Devs',${devs.map(dev=> s"'$dev'").mkString(",")}]"),
+                    @Html(pairingData)
+                ]);
+                var options = {
+                    chartArea : { left: 30, top:40 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            }
+
+    </script>
   <table class="table">
     <thead><tr><th class="danger" style="border: 2px solid black;"><h3 class="text-center">Most Paired</h3></th>
-      @defining(Records.mostPaired(3)) { topPairs =>
+      @defining(mostPairedDevs) { topPairs =>
         @for(r <- topPairs) {        
           @defining(r._1) { pair =>
           @defining(if(pair._1 == pair._2) pair._1 else pair._1 + "/" + pair._2) { p =>

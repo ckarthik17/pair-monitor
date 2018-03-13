@@ -3,12 +3,13 @@
 # ~~~~
 
 # Home page
-GET     	/           					controllers.Application.chart
-GET       /insert               controllers.Application.insert
-GET     	/records							controllers.Application.records
-POST  	  /records/new					controllers.Application.newRecord
-GET       /records/:id/delete   controllers.Application.delete(id: Long)
-GET		    /records/deleteAll		controllers.Application.deleteAll
+GET         /                          controllers.Application.chart
+GET         /insert                    controllers.Application.insert
+GET         /records                   controllers.Application.records
++nocsrf
+POST        /records/new               controllers.Application.newRecord
+GET         /records/:id/delete        controllers.Application.delete(id: Long)
+#GET         /records/deleteAll         controllers.Application.deleteAll
 
 # Map static resources from the /public folder to the /assets URL path
-GET     	/assets/*file					controllers.Assets.at(path="/public", file)
+GET         /assets/*file              controllers.Assets.at(path="/public", file)

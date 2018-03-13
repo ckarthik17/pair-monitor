@@ -1,42 +1,41 @@
-@(records: List[Record])(implicit flash: play.api.mvc.Flash)
+@(records: List[Record], devs: List[String])(implicit flash: play.api.mvc.Flash)
 
 @main("Pair Monitor") {
+    <div class="row clearfix">
+        <div class="col-xs-12 column">
+            <form class="form-inline" role="form" action="/records/new" method="POST">
+                <div class="form-group">
+                    <label>
+                        <select name="dev1" id="inputDev1" required class="form-control">
+                            <option value="" disabled selected>Select Dev 1</option>
+                            @for(dev <- devs) {
+                                <option>@dev</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <select name="dev2" id="inputDev2" class="form-control">
+                            <option value="" disabled selected>Select Dev 2</option>
+                            @for(dev <- devs) {
+                                <option>@dev</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label><input class="form-control" name="date" id="inputDate" type="text" placeholder="Date" required></label>
+                </div>
+                <div class="form-group">
+                    <label><input type="text" class="form-control" id="inputTask" name="task" rows="3" placeholder="task"></label>
+                </div>
 
-<div class="row clearfix">
-    <div class="col-xs-12 column">
-        <form class="form-inline" role="form" action="/records/new" method="POST">
-            <div class="form-group">
-                <label>
-                <select name="dev1" id="inputDev1" required class="form-control">
-                    <option value="" disabled selected>Select Dev 1</option>
-                    @for(dev <- Records.devs) {
-                    <option>@dev</option>
-                    }
-                </select>
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                <select name="dev2" id="inputDev2"  class="form-control">
-                    <option value="" disabled selected>Select Dev 2</option>
-                    @for(dev <- Records.devs) {
-                    <option>@dev</option>
-                    }
-                </select>
-                </label>
-            </div>
-            <div class="form-group">
-                <label><input class="form-control" name="date" id="inputDate" type="text" placeholder="Date" required></label>
-            </div>
-            <div class="form-group">
-                <label><input type="text" class="form-control" id="inputTask" name="task" rows="3" placeholder="task"></label>
-            </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
-
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
 <div class="row clearfix">
     <div class="col-md-12 column">
